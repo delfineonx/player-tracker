@@ -7,8 +7,8 @@
     scanIntervalTicks: 20,
     maxDequeuePerTick: 40,
 
-    join: null,
-    leave: null,
+    join: () => { },
+    leave: () => { },
 
     forceScan: null,
     checkValid: null,
@@ -26,7 +26,7 @@
 
   let _generationId = 1;
   let _scanCountdown = 0;
-  
+
   _PT.getPlayerIds = () => _presentIds.slice();
 
   _PT.forceScan = () => {
@@ -56,6 +56,7 @@
   _PT.onPlayerLeave = (playerId) => {
     const mapIndex = _presentById[playerId];
     const state = _stateById[playerId];
+
     if (!mapIndex) {
       if (state) {
         delete _stateById[playerId];
@@ -90,13 +91,13 @@
       _scanCountdown--;
       return;
     }
-    
+
     const nextGenerationId = _generationId + 1;
-    
+
     const newPlayerIds = api.getPlayerIds();
     const scanLength = newPlayerIds.length;
     let scanIndex = 0;
-    while(scanIndex < scanLength) {
+    while (scanIndex < scanLength) {
       const playerId = newPlayerIds[scanIndex];
       let state = _stateById[playerId];
       if (!state) {
@@ -150,7 +151,6 @@
 
       const lastIndex = _presentIds.length - 1;
       const lastPlayerId = _presentIds[lastIndex];
-
       if (lastIndex !== presentIndex) {
         _presentIds[presentIndex] = lastPlayerId;
         _presentById[lastPlayerId] = presentIndex + 1;
